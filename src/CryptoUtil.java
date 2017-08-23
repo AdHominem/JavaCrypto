@@ -16,6 +16,10 @@ public final class CryptoUtil {
 
     private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private final static int BYTE_MAX = 255;
+    private final static String UTF8_NOT_SUPPORTED = "UTF-8 is not supported on your platform";
+    private final static String INVALID_KEY = "The key generated for this HMAC_MD5 was invalid";
+    private final static String HMACMD5_NOT_AVAILBLE = "Your provider could not supply HmacMD5 as an algorithm";
+    private final static String MD5_NOT_AVAILABLE = "Your provider could not supply MD5 as an algorithm";
 
     private CryptoUtil() {}
 
@@ -119,37 +123,36 @@ public final class CryptoUtil {
         return result.toString();
     }
 
+    @NotNull
     @Contract(pure = true)
-    public static String MD5(final String message) {
-        String result = null;
+    public static String MD5(final String message) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         try {
             final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             messageDigest.update(message.getBytes("UTF-8"));
-            result = byteArrayToHexString(messageDigest.digest());
+            return byteArrayToHexString(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
-            logger.severe("Your provider could not supply MD5 as an algorithm");
+            throw new NoSuchAlgorithmException(MD5_NOT_AVAILABLE);
         } catch (UnsupportedEncodingException e) {
-            logger.severe("UTF-8 is not supported on your platform");
+            throw new UnsupportedEncodingException(UTF8_NOT_SUPPORTED);
         }
-        return result;
     }
 
+    @NotNull
     @Contract(pure = true)
-    public static String HMAC_MD5(final String message, final SecretKey MD5key) {
-        String result = null;
+    public static String HMAC_MD5(final String message, final SecretKey MD5key)
+            throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
         try {
             final Mac mac = Mac.getInstance("HmacMD5");
             mac.init(MD5key);
             final byte[] plainText = message.getBytes("UTF8");
             mac.update(plainText);
-            result = byteArrayToHexString(mac.doFinal());
+            return byteArrayToHexString(mac.doFinal());
         } catch (NoSuchAlgorithmException e) {
-            logger.severe("Your provider could not supply HmacMD5 as an algorithm");
+            throw new NoSuchAlgorithmException(HMACMD5_NOT_AVAILBLE);
         } catch (InvalidKeyException e) {
-            logger.severe("The key generated for this HMAC_MD5 was invalid");
+            throw new InvalidKeyException(INVALID_KEY);
         } catch (UnsupportedEncodingException e) {
-            logger.severe("UTF-8 is not supported on your platform");
+            throw new UnsupportedEncodingException(UTF8_NOT_SUPPORTED);
         }
-        return result;
     }
 }

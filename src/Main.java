@@ -2,6 +2,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class Main {
 
@@ -14,9 +15,9 @@ public class Main {
 //
 //        System.out.println(CryptoUtil.HMAC_MD5("This is a test!", MD5key));
 
-        int[] cipher = CryptoUtil.xor("Hello my 3 mates!", 1);
-        System.out.println(Arrays.toString(cipher));
-        CryptoUtil.crackXor(cipher).forEach((x,y) -> System.out.printf("%s:\t%d\n", x, y));
+//        int[] cipher = CryptoUtil.xor("Hello my 3 mates!", 1);
+//        System.out.println(Arrays.toString(cipher));
+//        CryptoUtil.crackXor(cipher).forEach((x,y) -> System.out.printf("%s:\t%d\n", x, y));
 
 //        DHParty client = new DHParty("Client", 13, 2);
 //        Thread.sleep(3000);
