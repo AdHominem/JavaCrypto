@@ -1,4 +1,4 @@
-import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ public class Party {
         messageBuffer.add(message);
     }
 
+    @NotNull
     @Override
     public String toString() {
         return name;

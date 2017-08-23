@@ -9,17 +9,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 
 public final class CryptoUtil {
 
-    private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private final static int BYTE_MAX = 255;
-    private final static String UTF8_NOT_SUPPORTED = "UTF-8 is not supported on your platform";
-    private final static String INVALID_KEY = "The key generated for this HMAC_MD5 was invalid";
-    private final static String HMACMD5_NOT_AVAILBLE = "Your provider could not supply HmacMD5 as an algorithm";
-    private final static String MD5_NOT_AVAILABLE = "Your provider could not supply MD5 as an algorithm";
 
     private CryptoUtil() {}
 
@@ -131,9 +125,9 @@ public final class CryptoUtil {
             messageDigest.update(message.getBytes("UTF-8"));
             return byteArrayToHexString(messageDigest.digest());
         } catch (NoSuchAlgorithmException e) {
-            throw new NoSuchAlgorithmException(MD5_NOT_AVAILABLE);
+            throw new NoSuchAlgorithmException(CryptoLogger.MD5_NOT_AVAILABLE);
         } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedEncodingException(UTF8_NOT_SUPPORTED);
+            throw new UnsupportedEncodingException(CryptoLogger.UTF8_NOT_SUPPORTED);
         }
     }
 
@@ -148,11 +142,11 @@ public final class CryptoUtil {
             mac.update(plainText);
             return byteArrayToHexString(mac.doFinal());
         } catch (NoSuchAlgorithmException e) {
-            throw new NoSuchAlgorithmException(HMACMD5_NOT_AVAILBLE);
+            throw new NoSuchAlgorithmException(CryptoLogger.HMACMD5_NOT_AVAILBLE);
         } catch (InvalidKeyException e) {
-            throw new InvalidKeyException(INVALID_KEY);
+            throw new InvalidKeyException(CryptoLogger.INVALID_KEY);
         } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedEncodingException(UTF8_NOT_SUPPORTED);
+            throw new UnsupportedEncodingException(CryptoLogger.UTF8_NOT_SUPPORTED);
         }
     }
 }

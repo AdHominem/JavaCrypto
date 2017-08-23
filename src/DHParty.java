@@ -1,13 +1,10 @@
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.logging.Logger;
 
 class DHParty extends Party {
-
-    private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     private final BigInteger exponent;
     private final BigInteger share;
@@ -30,19 +27,15 @@ class DHParty extends Party {
         share = generator.modPow(exponent, modulus);
     }
 
+    @NotNull
     @Contract(pure = true)
     private BigInteger generateExponent(final BigInteger modulus) {
-        BigInteger result = null;
-        try {
-            final SecureRandom random = new SecureRandom(this.toString().getBytes("UTF-8"));
+        final SecureRandom random = new SecureRandom();
+        BigInteger result = BigInteger.valueOf(random.nextLong()).mod(modulus);
+        while (result.compareTo(BigInteger.ZERO) == 0
+                && result.compareTo(BigInteger.ONE) == 0
+                && result.compareTo(modulus.subtract(BigInteger.ONE)) == 0) {
             result = BigInteger.valueOf(random.nextLong()).mod(modulus);
-            while (result.compareTo(BigInteger.ZERO) == 0
-                    && result.compareTo(BigInteger.ONE) == 0
-                    && result.compareTo(modulus.subtract(BigInteger.ONE)) == 0) {
-                result = BigInteger.valueOf(random.nextLong()).mod(modulus);
-            }
-        } catch (UnsupportedEncodingException e) {
-            logger.severe("UTF-8 is not supported on your platform");
         }
         return result;
     }

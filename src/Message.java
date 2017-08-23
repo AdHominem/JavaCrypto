@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 public class Message {
     private final Party sender;
     private final Party recipient;
@@ -9,6 +11,7 @@ public class Message {
         this.content = content;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return sender + " -> " + recipient + ": " + content;
