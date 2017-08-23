@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.Contract;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -28,6 +30,7 @@ class DHParty extends Party {
         share = generator.modPow(exponent, modulus);
     }
 
+    @Contract(pure = true)
     private BigInteger generateExponent(final BigInteger modulus) {
         BigInteger result = null;
         try {
