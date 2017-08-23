@@ -38,7 +38,6 @@ class DHParty extends Party {
                     && result.compareTo(modulus.subtract(BigInteger.ONE)) == 0) {
                 result = BigInteger.valueOf(random.nextLong()).mod(modulus);
             }
-            return result;
         } catch (UnsupportedEncodingException e) {
             logger.severe("UTF-8 is not supported on your platform");
         }
