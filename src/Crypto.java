@@ -1,4 +1,7 @@
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidParameterException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,11 +87,41 @@ public class Crypto {
         return result;
     }
 
-
     private static byte[] byteListToByteArray(List<Byte> list) {
         byte[] result = new byte[list.size()];
         for (int i = 0; i < result.length; i++) {
             result[i] = list.get(i);
+        }
+        return result;
+    }
+
+    // Consider inlining this function if you call it frequently since it would create a lot of arrays
+    private static char[] byteToHex(byte b) {
+        final char[] hexArray = "0123456789ABCDEF".toCharArray();
+        char[] result = new char[2];
+        // we need int to use the operators & and >>> here
+        final int byteAsInt = b & 0xFF;         // zero out the 3 MSBs
+        result[0] = hexArray[byteAsInt >>> 4];  // get the most significant nibble
+        result[1] = hexArray[byteAsInt & 0x0F]; // ...and the least significant one
+        return result;
+    }
+
+    private static String byteArrayToHexString(byte[] bytes) {
+        StringBuilder result = new StringBuilder();
+        for (byte b : bytes) {
+            result.append(byteToHex(b));
+        }
+        return result.toString();
+    }
+
+    public static String MD5(String message) {
+        String result = null;
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(message.getBytes());
+            result = byteArrayToHexString(messageDigest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("Your provider could not supply MD5 as an algorithm");
         }
         return result;
     }

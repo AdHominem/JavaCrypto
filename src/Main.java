@@ -1,11 +1,15 @@
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.stream.IntStream;
 
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
-        byte[] cipher = Crypto.xor("Hello my 3 mates!".getBytes(), 13);
-        Crypto.crackXor(cipher).forEach((x,y) -> System.out.printf("%s:\t%d\n", x, y));
+        System.out.println(Crypto.MD5("This is a test!"));
+
+//        byte[] cipher = Crypto.xor("Hello my 3 mates!".getBytes(), 13);
+//        Crypto.crackXor(cipher).forEach((x,y) -> System.out.printf("%s:\t%d\n", x, y));
 
 //        DHParty client = new DHParty("Client", 13, 2);
 //        Thread.sleep(3000);
