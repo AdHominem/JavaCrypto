@@ -1,3 +1,4 @@
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
@@ -9,28 +10,33 @@ class DHParty extends Party {
         return share;
     }
 
-    DHParty(String name, BigInteger modulus, BigInteger generator) {
+    DHParty(final String name, final BigInteger modulus, final BigInteger generator) {
         super(name);
-        SecureRandom random = new SecureRandom();
         exponent = generateExponent(modulus);
         share = generator.modPow(exponent, modulus);
     }
 
-    DHParty(String name, long modulusLong, long generatorLong) {
+    DHParty(final String name, final long modulusLong, final long generatorLong) {
         super(name);
-        BigInteger modulus = BigInteger.valueOf(modulusLong);
-        BigInteger generator = BigInteger.valueOf(generatorLong);
+        final BigInteger modulus = BigInteger.valueOf(modulusLong);
+        final BigInteger generator = BigInteger.valueOf(generatorLong);
         exponent = generateExponent(modulus);
         share = generator.modPow(exponent, modulus);
     }
 
-    private BigInteger generateExponent(BigInteger modulus) {
-        SecureRandom random = new SecureRandom(this.toString().getBytes());
-        BigInteger result = BigInteger.valueOf(random.nextLong()).mod(modulus);
-        while (result.compareTo(BigInteger.ZERO) == 0
-                && result.compareTo(BigInteger.ONE) == 0
-                && result.compareTo(modulus.subtract(BigInteger.ONE)) == 0) {
+    private BigInteger generateExponent(final BigInteger modulus) {
+        BigInteger result = null;
+        try {
+            final SecureRandom random = new SecureRandom(this.toString().getBytes("UTF-8"));
             result = BigInteger.valueOf(random.nextLong()).mod(modulus);
+            while (result.compareTo(BigInteger.ZERO) == 0
+                    && result.compareTo(BigInteger.ONE) == 0
+                    && result.compareTo(modulus.subtract(BigInteger.ONE)) == 0) {
+                result = BigInteger.valueOf(random.nextLong()).mod(modulus);
+            }
+            return result;
+        } catch (UnsupportedEncodingException e) {
+            System.err.println("UTF-8 is not supported on your platform");
         }
         return result;
     }

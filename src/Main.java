@@ -4,9 +4,9 @@ import java.util.stream.IntStream;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(final String[] args) throws InterruptedException {
 
-        System.out.println(Crypto.MD5("This is a test!"));
+        System.out.println(CryptoUtil.MD5("This is a test!"));
 
 //        byte[] cipher = Crypto.xor("Hello my 3 mates!".getBytes(), 13);
 //        Crypto.crackXor(cipher).forEach((x,y) -> System.out.printf("%s:\t%d\n", x, y));

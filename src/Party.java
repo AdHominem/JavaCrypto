@@ -2,23 +2,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Party {
-    List<Message> messageBuffer;
-    private String name;
+    private final List<Message> messageBuffer;
+    private final String name;
 
-    Party(String name) {
+    Party(final String name) {
         messageBuffer = new ArrayList<>();
         this.name = name;
     }
 
-    void send(Message message, Party recipient) {
+    void send(final Message message, final Party recipient) {
         recipient.receive(message);
     }
 
-    void send(String message, Party recipient) {
+    void send(final String message, final Party recipient) {
         recipient.receive(new Message(this, recipient, message));
     }
 
-    private void receive(Message message) {
+    private void receive(final Message message) {
         messageBuffer.add(message);
     }
 

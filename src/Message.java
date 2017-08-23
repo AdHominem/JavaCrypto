@@ -1,9 +1,9 @@
 public class Message {
-    private Party sender;
-    private Party recipient;
-    private String content;
+    private final Party sender;
+    private final Party recipient;
+    private final String content;
 
-    Message(Party sender, Party recipient, String content) {
+    Message(final Party sender, final Party recipient, final String content) {
         this.sender = sender;
         this.recipient = recipient;
         this.content = content;
