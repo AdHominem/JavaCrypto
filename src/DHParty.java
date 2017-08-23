@@ -1,8 +1,12 @@
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.logging.Logger;
 
 class DHParty extends Party {
+
+    private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
     private final BigInteger exponent;
     private final BigInteger share;
 
@@ -36,7 +40,7 @@ class DHParty extends Party {
             }
             return result;
         } catch (UnsupportedEncodingException e) {
-            System.err.println("UTF-8 is not supported on your platform");
+            logger.severe("UTF-8 is not supported on your platform");
         }
         return result;
     }
