@@ -3,10 +3,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.*;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -120,34 +117,20 @@ public final class CryptoUtil {
     @NotNull
     @Contract(pure = true)
     public static String MD5(final String message) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        try {
-            final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.update(message.getBytes("UTF-8"));
-            return byteArrayToHexString(messageDigest.digest());
-        } catch (NoSuchAlgorithmException e) {
-            throw new NoSuchAlgorithmException(CryptoLogger.MD5_NOT_AVAILABLE);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedEncodingException(CryptoLogger.UTF8_NOT_SUPPORTED);
-        }
+        final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+        messageDigest.update(message.getBytes("UTF-8"));
+        return byteArrayToHexString(messageDigest.digest());
     }
 
     @NotNull
     @Contract(pure = true)
     public static String HMAC_MD5(final String message, final SecretKey MD5key)
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
-        try {
-            final Mac mac = Mac.getInstance("HmacMD5");
-            mac.init(MD5key);
-            final byte[] plainText = message.getBytes("UTF8");
-            mac.update(plainText);
-            return byteArrayToHexString(mac.doFinal());
-        } catch (NoSuchAlgorithmException e) {
-            throw new NoSuchAlgorithmException(CryptoLogger.HMACMD5_NOT_AVAILBLE);
-        } catch (InvalidKeyException e) {
-            throw new InvalidKeyException(CryptoLogger.INVALID_KEY);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedEncodingException(CryptoLogger.UTF8_NOT_SUPPORTED);
-        }
+        final Mac mac = Mac.getInstance("HmacMD5");
+        mac.init(MD5key);
+        final byte[] plainText = message.getBytes("UTF8");
+        mac.update(plainText);
+        return byteArrayToHexString(mac.doFinal());
     }
 
     @NotNull
@@ -155,8 +138,8 @@ public final class CryptoUtil {
     static byte[] DESencrypt(final String message, final SecretKey DESkey)
             throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException {
-        byte[] plainText = message.getBytes("UTF8");
-        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+        final byte[] plainText = message.getBytes("UTF8");
+        final Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, DESkey);
         return cipher.doFinal(plainText);
     }
@@ -166,16 +149,44 @@ public final class CryptoUtil {
     static byte[] DESdecrypt(final byte[] cipherText, final SecretKey DESkey)
             throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException {
-        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+        final Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, DESkey);
         return cipher.doFinal(cipherText);
     }
 
     @NotNull
     @Contract(pure = true)
+    static byte[] RSAencrypt(final byte[] plainText, final PublicKey RSApubKey)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
+            IllegalBlockSizeException {
+        final Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, RSApubKey);
+        return cipher.doFinal(plainText);
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    static byte[] RSAdecrypt(final byte[] cipherText, final PrivateKey RSAprivKey)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
+            IllegalBlockSizeException {
+        final Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.DECRYPT_MODE, RSAprivKey);
+        return cipher.doFinal(cipherText);
+    }
+
+    @NotNull
+    @Contract(pure = true)
     static SecretKey DESgetKey() throws NoSuchAlgorithmException {
-        KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+        final KeyGenerator keyGen = KeyGenerator.getInstance("DES");
         keyGen.init(56);
         return keyGen.generateKey();
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    static KeyPair RSAgetKey() throws NoSuchAlgorithmException {
+        final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(1024);
+        return keyGen.generateKeyPair();
     }
 }

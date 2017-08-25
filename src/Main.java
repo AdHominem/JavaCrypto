@@ -1,4 +1,6 @@
 import javax.crypto.*;
+import java.security.Key;
+import java.security.KeyPair;
 import java.util.Arrays;
 
 public class Main {
@@ -11,6 +13,14 @@ public class Main {
         System.out.println(Arrays.toString(ciphertext));
 
         System.out.println(Arrays.toString(CryptoUtil.DESdecrypt(ciphertext, key)));
+
+        KeyPair keyPair = CryptoUtil.RSAgetKey();
+        ciphertext = CryptoUtil.RSAencrypt(message.getBytes(), keyPair.getPublic());
+        System.out.println(Arrays.toString(ciphertext));
+
+        System.out.println(ciphertext.length);
+
+        System.out.println(Arrays.toString(CryptoUtil.RSAdecrypt(ciphertext, keyPair.getPrivate())));
 
 //        System.out.println(CryptoUtil.MD5("This is a test!"));
 //
