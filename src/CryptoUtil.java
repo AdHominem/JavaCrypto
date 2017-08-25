@@ -1,10 +1,10 @@
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -148,5 +148,34 @@ public final class CryptoUtil {
         } catch (UnsupportedEncodingException e) {
             throw new UnsupportedEncodingException(CryptoLogger.UTF8_NOT_SUPPORTED);
         }
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    static byte[] DESencrypt(final String message, final SecretKey DESkey)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
+            BadPaddingException, IllegalBlockSizeException {
+        byte[] plainText = message.getBytes("UTF8");
+        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, DESkey);
+        return cipher.doFinal(plainText);
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    static byte[] DESdecrypt(final byte[] cipherText, final SecretKey DESkey)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
+            BadPaddingException, IllegalBlockSizeException {
+        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, DESkey);
+        return cipher.doFinal(cipherText);
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    static SecretKey DESgetKey() throws NoSuchAlgorithmException {
+        KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+        keyGen.init(56);
+        return keyGen.generateKey();
     }
 }

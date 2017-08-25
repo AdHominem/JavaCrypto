@@ -1,12 +1,16 @@
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
+import javax.crypto.*;
 import java.util.Arrays;
-import java.util.Optional;
 
 public class Main {
 
-    public static void main(final String[] args) throws InterruptedException, NoSuchAlgorithmException {
+    public static void main(final String[] args) throws Exception {
+
+        SecretKey key = CryptoUtil.DESgetKey();
+        String message = "Hello";
+        byte[] ciphertext = CryptoUtil.DESencrypt(message, key);
+        System.out.println(Arrays.toString(ciphertext));
+
+        System.out.println(Arrays.toString(CryptoUtil.DESdecrypt(ciphertext, key)));
 
 //        System.out.println(CryptoUtil.MD5("This is a test!"));
 //
