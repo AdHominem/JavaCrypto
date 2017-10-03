@@ -11,14 +11,12 @@ public class PasswordChecker {
     }
 
     // Submits the HASH of the user password and not the password itself
-    static boolean isPwned(byte[] password) throws NoSuchAlgorithmException, IOException {
-        String hash = CryptoUtil.SHA1(password);
-        URL url = new URL("https://haveibeenpwned.com/api/v2/pwnedpassword/" + hash.toLowerCase());
-        HttpURLConnection myURLConnection = (HttpURLConnection) url.openConnection();
+    public static boolean isPwned(byte[] password) throws NoSuchAlgorithmException, IOException {
+        final String hash = CryptoUtil.SHA1(password);
+        final URL url = new URL("https://haveibeenpwned.com/api/v2/pwnedpassword/" + hash.toLowerCase());
+        final HttpURLConnection myURLConnection = (HttpURLConnection) url.openConnection();
         myURLConnection.setRequestProperty("User-Agent",
                 "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
-
-        int returnCode = myURLConnection.getResponseCode();
-        return returnCode == 200;
+        return myURLConnection.getResponseCode() == 200;
     }
 }
