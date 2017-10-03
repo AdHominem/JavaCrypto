@@ -124,6 +124,14 @@ public final class CryptoUtil {
 
     @NotNull
     @Contract(pure = true)
+    public static String SHA1(final String message) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        final MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+        messageDigest.update(message.getBytes("UTF-8"));
+        return byteArrayToHexString(messageDigest.digest());
+    }
+
+    @NotNull
+    @Contract(pure = true)
     public static String HMAC_MD5(final String message, final SecretKey MD5key)
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
         final Mac mac = Mac.getInstance("HmacMD5");
